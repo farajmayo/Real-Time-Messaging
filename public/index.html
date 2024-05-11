@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        /* General styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        /* Message box styles */
+        #messageBox {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Form styles */
+        #inputContainer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #f9f9f9;
+        }
+
+        #message {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        #sendBtn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #sendBtn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>MaYo Chatting</h1>
+
+        <div id="messageBox">
+            <div id="messages"></div>
+        </div>
+
+        <div id="inputContainer">
+            <input type="text" id="message" placeholder="Enter a message" />
+            <button id="sendBtn">Send</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const sendBtn = document.getElementById('sendBtn')
+        const msgInput = document.getElementById('message')
+        const allMsg = document.getElementById('messages')
+
+        socket.on('message', message => {
+            const p = document.createElement('p')
+            p.classList.add('message');
+            p.innerText = message;
+            allMsg.appendChild(p)
+        })
+
+        sendBtn.addEventListener('click', () => {
+            const message = msgInput.value;
+            socket.emit('User-Message', message)
+            msgInput.value = ''; // Clear input field after sending message
+        })
+
+    </script>
+</body>
+
+</html>
